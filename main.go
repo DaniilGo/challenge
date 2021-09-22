@@ -15,9 +15,7 @@ import (
 var (
 	u           = "https://seg.halo.ad.gt/api/v1/rtd"
 	requestBody = []byte(`{"userIds":{"haloId": "TEST"},"config":{"publisherId": 999999000001}}`)
-	sprintfTpl  = `{
-    "returned_http_payload": %s
-}`
+	sprintfTpl  = "{\n  \"returned_http_payload\": %s\n}"
 )
 
 func main() {
