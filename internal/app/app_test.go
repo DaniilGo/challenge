@@ -87,27 +87,6 @@ func TestRunFailed_Read(t *testing.T) {
 	assert.Equal(t, "failed to read all: some error", err.Error())
 }
 
-func TestRun_GetMerged(t *testing.T) {
-	rtMock := &roundTripperMock{}
-	rtMock.On("RoundTrip", mock.Anything).Return(&http.Response{
-		StatusCode: http.StatusOK,
-		Body:       io.NopCloser(strings.NewReader(`{"somekey":"somevalue"}`)),
-	}, nil).Once()
-
-	httpClient := &http.Client{
-		Transport: rtMock,
-	}
-
-	s := source.NewHttpPostSource(testURL, []byte(testBody), httpClient)
-	m := merge.NewJSONSprintfMerger(`{"outerkey": %s}`)
-	b := &bytes.Buffer{}
-	a := NewApp(s, m, b)
-
-	err := a.Run(context.Background())
-	assert.NoError(t, err)
-	assert.Equal(t, "{\n \"outerkey\": {\n  \"somekey\": \"somevalue\"\n }\n}", b.String())
-}
-
 func TestRunFailed_GetMerged(t *testing.T) {
 	rtMock := &roundTripperMock{}
 	rtMock.On("RoundTrip", mock.Anything).Return(&http.Response{
